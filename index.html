@@ -5,32 +5,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="index.css" />
     <title>github-repo-listing-page</title>
+    <!--bootstrap CDN link-->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
       crossorigin="anonymous"
     />
+    <!--bootstrap icons CDN link-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <!--bootstrap js-->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+      integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
-    <div id="wrapper">
-      <form role="search" onsubmit="return false">
-        <input
-          type="text"
-          id="username"
-          class="form-control"
-          placeholder="Enter GitHub username"
-          aria-label="Search"
-        />
-        <button class="btn btn-outline-success" id="searchButton" type="submit">
-          Search
-        </button>
-      </form>
-    <div id="paginationbtns">
+    <!--app container-->
+    <div id="wrapper" class="custom-container container">
+      <!--search button-->
+      <header class="d-flex justify-content-between">
+        <h2 class="mb-0 fw-bold"><i class="bi bi-github"></i> Public Repositories</h2>
+
+        <form role="search" onsubmit="return false" class="d-flex">
+          <input
+            type="text"
+            id="username"
+            class="form-control"
+            placeholder="Enter GitHub username"
+            aria-label="Search"
+          />
+          <button
+            class="btn btn-outline-success"
+            id="searchButton"
+            type="submit"
+          >
+            Search
+          </button>
+        </form>
+      </header>
+
+      <!--user profile info-->
+      <div class="userProfile">
+        <div id="userInfo" class="row ms-0 p-2">
+          <div class="img-container p-0 col-auto">
+            <img id="avatar" src="" alt="User Avatar"/>
+          </div>
+          <div class="user-details col-auto align-items-center">
+            <h2 id="user"></h2>
+
+            <p id="bio" class="fst-italic mb-1"></p>
+            <div class="d-flex">
+              <p id="location" class="mb-1"></p>
+              <p id="publicRepos" class="mb-1"></p>
+            </div>
+
+            <a href="" id="websiteLink" class="link-opacity-75-hover link-underline link-underline-opacity-0"></a>
+            <a href="" id="twitterLink" class="link-opacity-75-hover link-underline link-underline-opacity-0"></a>
+          </div>
+        </div>
+      </div>
+
+      <!--list of repos-->
+      <div id="results" class="result-container mx-0"></div>
+
+      <!--Pagination buttons-->
+      <div id="paginationbtns" class="pagination d-block text-center">
         <button class="btn" id="prevButton">Previous</button>
         <button class="btn" id="nextButton">Next</button>
+      </div>
+      <!--end message-->
+      <h1 id="message"></h1>
     </div>
-    </div>
+    <!--script file-->
     <script src="index.js"></script>
   </body>
 </html>
