@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // update avatar image source
     const avatarImg = document.getElementById("avatar");
     avatarImg.src = userData.avatar_url;
-    // update username 
+    // update username
     const user = document.getElementById("user");
     user.innerHTML = `${userData.name}`;
     // update bio
@@ -31,15 +31,13 @@ document.addEventListener("DOMContentLoaded", function () {
     userLocation.innerHTML = `<i class="bi bi-geo-alt-fill"></i> ${userData.location}`;
     // update no. of public repos
     const repos = document.getElementById("publicRepos");
-    repos.innerHTML = `<i class="bi bi-database ms-4"></i> public Repos  ${userData.public_repos}`
+    repos.innerHTML = `<i class="bi bi-database ms-4"></i> public Repos  ${userData.public_repos}`;
     // update website link href
     const websiteLink = document.getElementById("websiteLink");
-    websiteLink.textContent = `${userData.blog}`;
+    websiteLink.innerHTML = `<i class="bi bi-window-fullscreen text-dark"></i> ${userData.blog}`;
     // update twitter link
-    const gitLink = document.getElementById("twitterLink");
-    gitLink.innerHTML = `<i class="bi bi-twitter text-dark ms-4"></i> ${userData.twitter_username}`;
-
-    // document.getElementById("userInfo").style.display = "block";
+    const gitLink = document.getElementById("githubLink");
+    gitLink.innerHTML = `<i class="bi bi-github text-dark"></i> ${userData.html_url}`;
   }
 
   // function to fetch repositories based on the username
@@ -59,46 +57,44 @@ document.addEventListener("DOMContentLoaded", function () {
   // function to display repositories
   function displayRepositories(repositories) {
     const repoContainer = document.getElementById("results");
-    repoContainer.classList.add("row","row-cols-1","row-cols-md-2","my-1")
+    repoContainer.classList.add("row", "row-cols-1", "row-cols-md-2", "my-1");
     repoContainer.innerHTML = ""; // clear existing content
-     
+
     if (Array.isArray(repositories)) {
-      
       repositories.forEach((repo) => {
         // Number of repos
-       const repoCol = document.createElement("div");
-       repoCol.classList.add("col","mb-1", "border","p-2","repo-col")
+        const repoCol = document.createElement("div");
+        repoCol.classList.add("col", "mb-1", "border", "p-2", "repo-col");
         repoCol.innerHTML = `
         <h3 class="fw-bold">${repo.name}</h3>
         <p style="color:#DAD7CD">${repo.description || "No description"}</p>
         `;
         // create a div to hold the badges
         const badgesContainer = document.createElement("div");
-        badgesContainer.classList.add("d-inline-flex","flex-wrap","gap-2");
+        badgesContainer.classList.add("d-inline-flex", "flex-wrap", "gap-2");
         // loop through repo.topics and create badges
         repo.topics.forEach((topic) => {
           const badge = document.createElement("span");
-          badge.classList.add("badge","badge-color")
+          badge.classList.add("badge", "badge-color");
           badge.textContent = topic;
           badgesContainer.appendChild(badge);
         });
         repoCol.appendChild(badgesContainer);
 
-      // create a span to hold github link
-      const linkContainer = document.createElement("a");
-      linkContainer.innerHTML = `<a href=${repo.html_url} class="text-dark ms-2 "><i class="bi bi-github"> Repo link</i></a>`;
-      repoCol.appendChild(linkContainer);
-    
-      repoContainer.appendChild(repoCol);
+        // create a span to hold github link
+        const linkContainer = document.createElement("a");
+        linkContainer.innerHTML = `<a href=${repo.html_url} class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover ms-2 "><i class="bi bi-github"> Repo link</i></a>`;
+        repoCol.appendChild(linkContainer);
+
+        repoContainer.appendChild(repoCol);
       });
-    } else if (repositories.length === 0){
-      repoCol.innerHTML = `<h4>Finish</h4>`
-    } 
-    else {
+    } else if (repositories.length === 0) {
+      repoCol.innerHTML = `<h4>No repositories found</h4>`;
+    } else {
       console.error("Invalid data format:", repositories);
     }
   }
-  
+
   // function to show a message
   function showMessage(message) {
     const messageContainer = document.getElementById("message");
@@ -106,8 +102,10 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // function to handle search
+  const loaderSpinner = document.getElementById("loadingSpinner");
   async function handleSearch(e) {
     e.preventDefault();
+
     const username = document.getElementById("username").value.trim();
     if (!username) {
       console.error("userName is empty");
@@ -116,44 +114,52 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     currentPage = 1;
     try {
+      // show loading spinner
+      loaderSpinner.style.display = "block";
       await displayUserInfo(username);
       const repositories = await fetchRepositories(username, currentPage);
       displayRepositories(repositories);
+      // hide loading spinner
+      loaderSpinner.style.display = "none";
     } catch (error) {
       console.error("Error handling search:", error);
+      loaderSpinner.style.display = "none";
     }
-
-    // document.getElementById("username").value = "";
   }
 
-  // handle pagination 
+  // handle pagination
   async function handlePagination(direction) {
-    if(direction === "prev" && currentPage > 1) {
+    loaderSpinner.style.display = "block";
+
+    if (direction === "prev" && currentPage > 1) {
       currentPage--;
     } else if (direction === "next") {
       currentPage++;
-    } 
-    
-    const username = document.getElementById("username").value.trim();
-        if (!username) {
-            console.error("Username is empty");
-            alert("Username is empty");
-            return;
-        }
+    }
 
-        try {
-            const repositories = await fetchRepositories(username, currentPage);
-            displayRepositories(repositories);
-            // check if there is no repository left
-            if(repositories.length === 0 && direction === "next") {
-              showMessage("you have reached the last page of repositories.")
-            } else {
-              // clear the message if not on last page
-              showMessage("");
-            }
-        } catch (error) {
-            console.error("Error handling pagination:", error);
-        }
+    const username = document.getElementById("username").value.trim();
+    if (!username) {
+      console.error("Username is empty");
+      alert("Username is empty");
+      return;
+    }
+
+    try {
+      const repositories = await fetchRepositories(username, currentPage);
+      displayRepositories(repositories);
+      // check if there is no repository left
+      if (repositories.length === 0 && direction === "next") {
+        showMessage("You have reached the last page of repositories.");
+        loaderSpinner.style.display = "none";
+      } else {
+        // clear the message if not on last page
+        showMessage("");
+        loaderSpinner.style.display = "none";
+      }
+    } catch (error) {
+      console.error("Error handling pagination:", error);
+      loaderSpinner.style.display = "none";
+    }
   }
   // set up event listeners
   document
@@ -161,10 +167,10 @@ document.addEventListener("DOMContentLoaded", function () {
     .addEventListener("click", handleSearch);
   // event listeners for pagination buttons
   document
-  .getElementById("prevButton")
-  .addEventListener("click", () => handlePagination("prev"));
-  
+    .getElementById("prevButton")
+    .addEventListener("click", () => handlePagination("prev"));
+
   document
-  .getElementById("nextButton")
-  .addEventListener("click", () => handlePagination("next"));
+    .getElementById("nextButton")
+    .addEventListener("click", () => handlePagination("next"));
 });

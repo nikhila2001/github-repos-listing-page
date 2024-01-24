@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+  <!--HEAD CONTENT-->
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -29,20 +30,24 @@
       crossorigin="anonymous"
     ></script>
   </head>
+  <!--BODY CONTENT-->
   <body>
     <!--app container-->
-    <div id="wrapper" class="custom-container container">
-      <!--search button-->
-      <header class="d-flex justify-content-between">
+    <div id="wrapper" class="shadow-lg p-1 custom-container container">
+      <!--header-->
+      <header class="d-flex justify-content-between p-1">
+        <!--title-->
         <h2 class="mb-0 fw-bold"><i class="bi bi-github"></i> Public Repositories</h2>
-
+        <!--search button-->
         <form role="search" onsubmit="return false" class="d-flex">
           <input
             type="text"
             id="username"
             class="form-control"
             placeholder="Enter GitHub username"
-            aria-label="Search"
+            aria-label="Search github Repositories"
+            role="search"
+            
           />
           <button
             class="btn btn-outline-success"
@@ -53,24 +58,28 @@
           </button>
         </form>
       </header>
-
-      <!--user profile info-->
-      <div class="userProfile">
-        <div id="userInfo" class="row ms-0 p-2">
+      <main id="main-section">
+        <!--loading spinner-->
+        <div id="loadingSpinner" class="loader spinner-border text-success" role="status" style="display: none">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <!--user profile info-->
+      <div class="userProfile" id="userProfile">
+        <div id="userInfo" class="row ms-0 p-2 ">
           <div class="img-container p-0 col-auto">
+            
             <img id="avatar" src="" alt="User Avatar"/>
           </div>
           <div class="user-details col-auto align-items-center">
-            <h2 id="user"></h2>
+            <h2 id="user" class="mb-0"></h2>
 
             <p id="bio" class="fst-italic mb-1"></p>
             <div class="d-flex">
               <p id="location" class="mb-1"></p>
               <p id="publicRepos" class="mb-1"></p>
             </div>
-
-            <a href="" id="websiteLink" class="link-opacity-75-hover link-underline link-underline-opacity-0"></a>
-            <a href="" id="twitterLink" class="link-opacity-75-hover link-underline link-underline-opacity-0"></a>
+              <a href="" id="websiteLink" class="link-dark link-underline-opacity-0 link-offset-3-hover link-underline-opacity-75-hover"></a>
+              <a href="" id="githubLink" class="link-dark link-underline-opacity-0 link-offset-3-hover link-underline-opacity-75-hover"></a>
           </div>
         </div>
       </div>
@@ -79,14 +88,16 @@
       <div id="results" class="result-container mx-0"></div>
 
       <!--Pagination buttons-->
-      <div id="paginationbtns" class="pagination d-block text-center">
+      <div id="paginationbtns" class="pagination d-block text-center my-2">
         <button class="btn" id="prevButton">Previous</button>
         <button class="btn" id="nextButton">Next</button>
       </div>
       <!--end message-->
-      <h1 id="message"></h1>
+      <h2 id="message" class="text-center"></h2>
     </div>
-    <!--script file-->
+      </main>
+      
+    <!--SCRIPT FILE-->
     <script src="index.js"></script>
   </body>
 </html>
